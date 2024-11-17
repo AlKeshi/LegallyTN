@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
+
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { Menu, MenuItem } from '@mui/material';
 import {
@@ -32,6 +33,7 @@ import {
   Security,
   Support,
 } from '@mui/icons-material';
+import ChatbotUI from './components/ChatbotUI';
 
 
 const HomePage = () => {
@@ -254,7 +256,8 @@ const HomePage = () => {
                         backgroundColor: '#fafafa',
                       },
                     }}
-                    onClick={() => navigate('/register')}
+                    // Replace the existing onClick handler for the "Get Started" button with this:
+                    onClick={() => user ? navigate('/chat') : navigate('/login')}
                   >
                     Get Started
                   </Button>
@@ -331,6 +334,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
+        <Route path="/chat" element={<ChatbotUI />} />
       </Routes>
     </Router>
   );
