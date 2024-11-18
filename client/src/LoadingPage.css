@@ -7,8 +7,7 @@
   }
   
   .loading-page {
-    background: linear-gradient(-45deg, #ef4444, #ff6f61, #ffd700, #4a90e2);
+    background: linear-gradient(-45deg, #2c3e50, #34495e, #7f8c8d, #bdc3c7);
     background-size: 300% 300%;
     animation: gradientAnimation 10s ease infinite;
   }
-  
