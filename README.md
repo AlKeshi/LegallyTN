@@ -1,38 +1,79 @@
-# 🇹🇳 Tunisian Legal Consulting Chatbot
+🇹🇳 Tunisian Legal Consulting Chatbot
 
-Welcome to the **Tunisian Legal Consulting Chatbot**, an intuitive and efficient chatbot built with **React** to assist users in understanding Tunisian legal queries. This project aims to bridge the gap between individuals and legal information in a user-friendly and interactive manner.
+======================================
 
----
+Welcome to the **Tunisian Legal Consulting Chatbot**! This platform was created using **Express.js** for the server-side hosting and **React.js** for the frontend, styled with **MUI designs** and **Tailwind CSS** for select components. It aims to assist users in understanding Tunisian legal queries through an intuitive and interactive interface.
 
-## 🌟 Features
+* * *
 
-- **Legal Assistance**: Provides insights into Tunisian legal matters.
-- **Natural Language Interaction**: Users can interact in a conversational style.
-- **Efficient and Scalable**: Designed for responsive and seamless user experience.
-- **Customizable**: Easily extendable to accommodate additional legal modules or regions.
+🌟 Features
+-----------
 
----
+* **Legal Assistance**: Offers insights into Tunisian legal matters.
+* **Natural Language Interaction**: Enables conversational-style queries.
+* **Modern Design**: Combines Material UI and Tailwind CSS for a polished user experience.
+* **Customizable**: Easily extendable to accommodate additional legal modules or regions.
 
-## 💻 Technologies Used
+* * *
 
-- **Frontend**: React (Hooks, Context API)
-- **Styling**: CSS Modules / Tailwind CSS (customizable based on your project)
-- **Backend (Optional)**: Placeholder for backend APIs, if implemented.
-- **Libraries**: Axios, React Router (for routing), or others specific to your implementation.
+💻 Technologies Used
+--------------------
 
----
+* **Frontend**: React.js with Material UI and Tailwind CSS for components.
+* **Backend**: Express.js for server hosting.
+* **Libraries**: Axios, React Router, and other supporting tools.
 
-## 🚀 Getting Started
+* * *
+
+🚀 Getting Started
+------------------
 
 ### Prerequisites
 
-Ensure you have the following installed:
-- Node.js (v14 or higher)
-- npm or Yarn
+Make sure you have the following installed:
 
-### Installation
+* Node.js (v14 or higher)
+* npm or Yarn
+
+### Installation and Running the Application
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/AlKeshi/HouyemAI.git
-   cd HouyemAI
+   ```
+
+2. Start the server:
+
+   ```bash
+   cd HouyemAI/server
+   node server.js
+   ```
+
+3. Start the client:
+
+   ```bash
+   cd ../Projet/client
+   npm run
+   ```
+
+4. Access the application in your browser at:
+
+   ```
+   http://localhost:3000
+   ```
+
+* * *
+
+🛠️ Customization
+-----------------
+
+Feel free to modify the React components, Tailwind styles, or server routes to suit your needs. Contributions are welcome to improve and extend the project!
+
+* * *
+
+🤝 Contributing
+---------------
+
+We welcome contributions to this project! Please fork the repository and submit a pull request with your improvements.
+
