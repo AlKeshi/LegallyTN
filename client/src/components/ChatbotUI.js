@@ -314,7 +314,7 @@ const ChatbotUI = () => {
             sx={{ height: 60, mr: 2 }}
           />
           <Typography variant="h6" color="error" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            محامي الذكاء الاصطناعي
+            HouyemAI
           </Typography>
           {/* User section */}
           {user && (
