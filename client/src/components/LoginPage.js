@@ -165,7 +165,7 @@ const LoginPage = () => {
                   component="button"
                   variant="body2"
                   color="error"
-                  onClick={(e) => e.preventDefault()}
+                  onClick={() => navigate('/register')}
                 >
                   Register here
                 </Link>

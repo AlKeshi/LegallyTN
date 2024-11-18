@@ -27,15 +27,13 @@ import {
   Balance,
   Gavel,
   MenuBook,
-  Public,
-  Menu as MenuIcon,
   AccessTime,
   Security,
-  Support,
+  Menu as MenuIcon,
 } from '@mui/icons-material';
 import ChatbotUI from './components/ChatbotUI';
-
-
+import './App.css'; // Import the CSS file for animations
+import LoadingPage from './LoadingPage';
 const HomePage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -66,6 +64,7 @@ const HomePage = () => {
       description: 'Your information is protected with advanced security measures',
     },
   ];
+  
   useEffect(() => {
     // Check authentication status when component mounts
     const checkAuth = async () => {
@@ -84,6 +83,7 @@ const HomePage = () => {
 
     checkAuth();
   }, []);
+  
   const handleLogout = async () => {
     try {
       await fetch('http://localhost:5000/api/logout', {
@@ -97,6 +97,7 @@ const HomePage = () => {
       console.error('Error logging out:', error);
     }
   };
+  
   return (
     <Box>
       <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 2 }}>
@@ -198,8 +199,8 @@ const HomePage = () => {
 
       {/* Hero Section */}
       <Box
+        className="animated-background-deep"
         sx={{
-          background: 'linear-gradient(to bottom right, #ef4444, #b91c1c)',
           minHeight: '100vh',
           pt: 8,
           position: 'relative',
@@ -328,6 +329,21 @@ const HomePage = () => {
 };
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading delay, e.g., 2 seconds.
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    // Cleanup timer on component unmount
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
   return (
     <Router>
       <Routes>
