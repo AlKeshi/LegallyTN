@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
-
+import ContactUs from './components/ContactUs';
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { Menu, MenuItem } from '@mui/material';
 import {
@@ -16,12 +16,16 @@ import {
   CardContent,
   Grid,
   IconButton,
+  TextField,
   useMediaQuery,
   useTheme,
   Drawer,
   List,
   ListItem,
   ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   Balance,
@@ -30,10 +34,14 @@ import {
   AccessTime,
   Security,
   Menu as MenuIcon,
+  ExpandMore,
 } from '@mui/icons-material';
 import ChatbotUI from './components/ChatbotUI';
 import './App.css'; // Import the CSS file for animations
 import LoadingPage from './LoadingPage';
+// Additional CSS for beautification
+import AboutPage from './components/AboutPage';
+import { ArticlesSection, TeamSection } from './components/EnhancedSections';
 const HomePage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -64,7 +72,58 @@ const HomePage = () => {
       description: 'Your information is protected with advanced security measures',
     },
   ];
-  
+
+  const testimonials = [
+    {
+      name: "Amal A.",
+      quote: "HouyemAI helped me understand my rights so easily. Highly recommend!",
+    },
+    {
+      name: "Yassine K.",
+      quote: "Great service with 24/7 availability. It provided me with timely legal support!",
+    },
+    {
+      name: "Fatma H.",
+      quote: "I loved the experience! Everything was clear, and I got the help I needed instantly.",
+    },
+  ];
+
+  const articles = [
+    {
+      title: "5 Things You Should Know About Tunisian Labor Law",
+      snippet: "A quick summary of the top five things every employee should know about labor laws in Tunisia...",
+      link: "/articles/labor-law",
+    },
+    {
+      title: "Understanding Your Rights as a Whistleblower in Tunisia",
+      snippet: "The Tunisian government has specific provisions to protect whistleblowers. Learn what these are...",
+      link: "/articles/whistleblower-rights",
+    },
+    {
+      title: "Navigating Divorce in Tunisia: What You Need to Know",
+      snippet: "Divorce can be complex, but Tunisian law ensures both parties are protected. Here are some key insights...",
+      link: "/articles/divorce-in-tunisia",
+    },
+  ];
+
+  const teamMembers = [
+    {
+      name: "Oussema Jebali",
+      role: "Lead Developer",
+      description: "Oussema is the visionary lead developer behind HouyemAI.",
+    },
+    {
+      name: "Houyem",
+      role: "Legal Expert",
+      description: "Houyem provides the crucial legal knowledge that ensures the AI system is up-to-date.",
+    },
+    {
+      name: "Salem Fradi",
+      role: "UI/UX Designer",
+      description: "Salem designs user-friendly experiences for every user of our platform.",
+    },
+  ];
+
   useEffect(() => {
     // Check authentication status when component mounts
     const checkAuth = async () => {
@@ -83,7 +142,7 @@ const HomePage = () => {
 
     checkAuth();
   }, []);
-  
+
   const handleLogout = async () => {
     try {
       await fetch('http://localhost:5000/api/logout', {
@@ -97,7 +156,7 @@ const HomePage = () => {
       console.error('Error logging out:', error);
     }
   };
-  
+
   return (
     <Box>
       <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 2 }}>
@@ -111,7 +170,7 @@ const HomePage = () => {
               <MenuIcon />
             </IconButton>
           )}
-          
+
           <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
             <Box
               component="img"
@@ -120,7 +179,7 @@ const HomePage = () => {
               sx={{ height: 100, mr: 2 }}
             />
             <Typography variant="h6" color="error" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-              محامي الذكاء الاصطناعي
+              HouyemAI
             </Typography>
           </Box>
 
@@ -175,7 +234,7 @@ const HomePage = () => {
           {user ? (
             <>
               <ListItem>
-                <ListItemText 
+                <ListItemText
                   primary={`${user.firstName} ${user.lastName}`}
                   secondary={user.email}
                 />
@@ -209,6 +268,7 @@ const HomePage = () => {
       >
         {/* Decorative Elements */}
         <Box
+          className="decorative-circle"
           sx={{
             position: 'absolute',
             top: '20%',
@@ -220,6 +280,7 @@ const HomePage = () => {
           }}
         />
         <Box
+          className="decorative-circle"
           sx={{
             position: 'absolute',
             bottom: '10%',
@@ -235,9 +296,9 @@ const HomePage = () => {
           {/* Main Content */}
           <Grid container spacing={4} sx={{ pt: 8 }}>
             <Grid item xs={12} md={6}>
-              <Box sx={{ color: 'white', mt: 8 }}>
+              <Box className="hero-text" sx={{ color: 'white', mt: 8 }}>
                 <Typography variant="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
-                Mar7aba {user ? `${user.firstName}` : ''}
+                  Mar7aba {user ? `${user.firstName}` : ''}
                 </Typography>
                 <Typography variant="h3" sx={{ mb: 4, fontWeight: 'bold', color: '#ffd700' }}>
                   مستشارك القانوني الذكي
@@ -250,6 +311,7 @@ const HomePage = () => {
                   <Button
                     variant="contained"
                     size="large"
+                    className="hero-button"
                     sx={{
                       backgroundColor: 'white',
                       color: '#ef4444',
@@ -257,7 +319,6 @@ const HomePage = () => {
                         backgroundColor: '#fafafa',
                       },
                     }}
-                    // Replace the existing onClick handler for the "Get Started" button with this:
                     onClick={() => user ? navigate('/chat') : navigate('/login')}
                   >
                     Get Started
@@ -265,6 +326,7 @@ const HomePage = () => {
                   <Button
                     variant="outlined"
                     size="large"
+                    className="hero-button-outline"
                     sx={{
                       borderColor: 'white',
                       color: 'white',
@@ -273,7 +335,7 @@ const HomePage = () => {
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
                       },
                     }}
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate('/about')}
                   >
                     Learn More
                   </Button>
@@ -282,6 +344,7 @@ const HomePage = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Box
+                className="hero-illustration"
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -289,7 +352,6 @@ const HomePage = () => {
                   height: '100%',
                 }}
               >
-                {/* Replace with your actual logo/illustration */}
                 <Balance sx={{ fontSize: 300, color: 'white', opacity: 0.9 }} />
               </Box>
             </Grid>
@@ -300,6 +362,7 @@ const HomePage = () => {
             {features.map((feature, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <Card
+                  className="feature-card"
                   sx={{
                     height: '100%',
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -322,8 +385,105 @@ const HomePage = () => {
               </Grid>
             ))}
           </Grid>
+
+          {/* Testimonials Section */}
+          <Box className="testimonials-section" sx={{ backgroundColor: '#f8f8f8', py: 8 }}>
+            <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
+              Testimonials
+            </Typography>
+            <Container maxWidth="lg">
+              <Grid container spacing={4}>
+                {testimonials.map((testimonial, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Card sx={{ p: 3, boxShadow: 3 }}>
+                      <Typography variant="body1" sx={{ mb: 2, fontStyle: 'italic' }}>
+                        "{testimonial.quote}"
+                      </Typography>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', textAlign: 'right' }}>
+                        - {testimonial.name}
+                      </Typography>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </Container>
+          </Box>
+
+          {/* Articles Section */}
+          <ArticlesSection />
+
+          {/* Team Section */}
+          <TeamSection />
+
+
         </Container>
       </Box>
+      {/* Contact Form Section */}
+      <ContactUs />
+      {/* Footer Section */}
+      <Box
+        className="footer-section"
+        sx={{
+          backgroundColor: 'black',
+          color: 'white',
+          py: 4,
+          mt: 8,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                About Us
+              </Typography>
+              <Typography variant="body2">
+                HouyemAI is committed to providing accessible and reliable legal guidance, leveraging AI technology to support the community.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Quick Links
+              </Typography>
+              <Typography variant="body2" className="footer-link"><Button onClick={() => navigate('/login')}>Login</Button></Typography>
+              <Typography variant="body2" className="footer-link"><Button onClick={() => navigate('/register')}>Sign Up</Button></Typography>
+              <Typography variant="body2" className="footer-link"><Button onClick={() => navigate('/about')}> Learn More</Button></Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Contact Us
+              </Typography>
+              <Typography variant="body2">
+                Email: salemaziz.fradi@supcom.tn
+              </Typography>
+              <Typography variant="body2">
+                Email: oussema.jebali@supcom.tn
+              </Typography>
+              <Typography variant="body2">
+                Phone: +216 99 144 778
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography variant="body2" sx={{ mt: 4, textAlign: 'center' }}>
+            &copy; 2024 HouyemAI. All rights reserved.
+          </Typography>
+        </Container>
+      </Box>
+
+      {/* Live Chat Button */}
+      <IconButton
+        className="live-chat-button"
+        sx={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          backgroundColor: '#ef4444',
+          color: 'white',
+          '&:hover': { backgroundColor: '#d32f2f' },
+        }}
+        onClick={() => navigate('/chat')}
+      >
+        <AccountCircle />
+      </IconButton>
     </Box>
   );
 };
@@ -351,8 +511,10 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/chat" element={<ChatbotUI />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </Router>
+
   );
 };
 

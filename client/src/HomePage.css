@@ -1,0 +1,105 @@
+/* HomePage.css */
+
+.animated-background-deep {
+    background: linear-gradient(135deg, #2b5876, #4e4376);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+  }
+  
+  .decorative-circle {
+    animation: pulse 10s infinite;
+  }
+  
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .hero-text {
+    animation: fadeIn 3s ease;
+  }
+  
+  .hero-button {
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .hero-button:hover {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-button-outline {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .hero-button-outline:hover {
+    transform: scale(1.05);
+  }
+  
+  .hero-illustration {
+    animation: slideIn 2s ease;
+  }
+  
+  .feature-card {
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .faq-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .faq-accordion {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .footer-section {
+    background-color: #1c1c1c;
+    color: #f5f5f5;
+  }
+  
+  .footer-link {
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .footer-link:hover {
+    color: #ffd700;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
