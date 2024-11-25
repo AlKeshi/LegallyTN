@@ -41,7 +41,9 @@ import {
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 import { useNavigate } from 'react-router-dom';
-const genAI = new GoogleGenerativeAI("AIzaSyBYANsp9wOZYg9zq-B0h0ZEN_pInj1n2sk");
+
+
+const genAI = new GoogleGenerativeAI('AIzaSyBYANsp9wOZYg9zq-B0h0ZEN_pInj1n2sk');
 
 const DRAWER_WIDTH = 280;
 
@@ -49,6 +51,7 @@ const ChatbotUI = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isCopied, setIsCopied] = useState(false);
   const [conversations, setConversations] = useState([
     {
       id: 'default',
@@ -56,44 +59,33 @@ const ChatbotUI = () => {
       messages: [
         {
           role: 'assistant',
-          content: 'Mar7ba! I am your AI legal assistant. How can I help you today?',
+          content:
+            'Mar7ba! I am your AI legal assistant. How can I help you today?',
           timestamp: new Date(),
-          lied: false,
-          disliked: false
-        }
-      ]
-    }
+          liked: false,
+          disliked: false,
+        },
+      ],
+    },
   ]);
   const [currentConversationId, setCurrentConversationId] = useState('default');
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
+  const [retrievedJson, setRetrievedJson] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [jsonDrawerOpen, setJsonDrawerOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const currentConversation = conversations.find(conv => conv.id === currentConversationId) || conversations[0];
-  const generateTitle = async (userMessage) => {
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const prompt = `Generate a very brief (max 4-5 words) title for a chat conversation that starts with this message: "${userMessage}". The title should capture the main topic or intent. Just return the title itself without any additional text or punctuation.`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text().slice(0, 30); // Limit to 30 characters for UI
-    } catch (error) {
-      console.error('Error generating title:', error);
-      return userMessage.slice(0, 30) + (userMessage.length > 30 ? '...' : '');
-    }
-  };
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const currentConversation =
+    conversations.find((conv) => conv.id === currentConversationId) ||
+    conversations[0];
 
   useEffect(() => {
     // Fetch user data when component mounts
     const fetchUser = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/auth/status', {
-          credentials: 'include'
+          credentials: 'include',
         });
         const data = await response.json();
         if (data.isAuthenticated) {
@@ -106,6 +98,10 @@ const ChatbotUI = () => {
 
     fetchUser();
   }, []);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [currentConversation.messages]);
+
   const handleLogout = async () => {
     try {
       await fetch('http://localhost:5000/api/logout', {
@@ -127,100 +123,18 @@ const ChatbotUI = () => {
       messages: [
         {
           role: 'assistant',
-          content: 'Mar7ba! I am your AI legal assistant. How can I help you today?',
+          content:
+            'Mar7ba! I am your AI legal assistant. How can I help you today?',
           timestamp: new Date(),
           liked: false,
-          disliked: false
-        }
-      ]
+          disliked: false,
+        },
+      ],
     };
     setConversations([newConversation, ...conversations]);
     setCurrentConversationId(newConversation.id);
+    setJsonDrawerOpen(false);
   };
-  const inputRef = useRef(null);
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userMessage = {
-      role: 'user',
-      content: input.trim(),
-      timestamp: new Date()
-    };
-
-    // Update conversation title with first user message if it's "New Chat"
-    if (currentConversation.title === 'New Chat') {
-      const generatedTitle = await generateTitle(input.trim());
-      const updatedConversations = conversations.map(conv =>
-        conv.id === currentConversationId
-          ? { ...conv, title: generatedTitle }
-          : conv
-      );
-      setConversations(updatedConversations);
-    }
-
-    // Add user message to current conversation
-    const updatedConversations = conversations.map(conv =>
-      conv.id === currentConversationId
-        ? { ...conv, messages: [...conv.messages, userMessage] }
-        : conv
-    );
-    setConversations(updatedConversations);
-    setInput('');
-    setLoading(true);
-    inputRef.current?.focus();
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const prompt = `${input.trim()}`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
-
-      const assistantMessage = {
-        role: 'assistant',
-        content: text,
-        timestamp: new Date(),
-        liked: false,
-        disliked: false
-      };
-
-      const finalConversations = conversations.map(conv =>
-        conv.id === currentConversationId
-          ? { ...conv, messages: [...conv.messages, userMessage, assistantMessage] }
-          : conv
-      );
-      setConversations(finalConversations);
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = {
-        role: 'assistant',
-        content: 'I apologize, but I encountered an error processing your request. Please try again.',
-        timestamp: new Date()
-      };
-      const errorConversations = conversations.map(conv =>
-        conv.id === currentConversationId
-          ? { ...conv, messages: [...conv.messages, errorMessage] }
-          : conv
-      );
-      setConversations(errorConversations);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-      inputRef.current?.focus();
-    }
-  };
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
   const clearCurrentChat = () => {
     const updatedConversations = conversations.map(conv =>
       conv.id === currentConversationId
@@ -239,15 +153,132 @@ const ChatbotUI = () => {
     );
     setConversations(updatedConversations);
   };
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+  const generateTitle = async (userMessage, assistantResponse) => {
+    try {
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const prompt = `Generate a very brief (max 4-5 words) title for a chat conversation that starts with this message: "${userMessage}" and includes this response: "${assistantResponse}". The title should capture the main topic or intent. Just return the title itself without any additional text or punctuation.`;
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text().slice(0, 30); // Limit to 30 characters for UI
+    } catch (error) {
+      console.error('Error generating title:', error);
+      return (
+        userMessage.slice(0, 30) + (userMessage.length > 30 ? '...' : '')
+      );
+    }
+  };
+
+  const inputRef = useRef(null);
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = {
+      role: 'user',
+      content: input.trim(),
+      timestamp: new Date(),
+    };
+
+    // Add user message to current conversation
+    const updatedConversations = conversations.map((conv) =>
+      conv.id === currentConversationId
+        ? { ...conv, messages: [...conv.messages, userMessage] }
+        : conv
+    );
+    setConversations(updatedConversations);
+    setInput('');
+    setLoading(true);
+    inputRef.current?.focus();
+
+    try {
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const prompt = `${input.trim()}`;
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      // Extract metadata from the response
+      const metadata = {
+        prompt_feedback: response.prompt_feedback,
+        candidates: response.candidates,
+        // Add other relevant fields as needed
+      };
+      setRetrievedJson(metadata);
+      setJsonDrawerOpen(true);
+      setDrawerOpen(false);
+
+      const assistantMessage = {
+        role: 'assistant',
+        content: text,
+        timestamp: new Date(),
+        liked: false,
+        disliked: false,
+      };
+
+      const finalConversations = conversations.map((conv) =>
+        conv.id === currentConversationId
+          ? {
+            ...conv,
+            messages: [...conv.messages, userMessage, assistantMessage],
+          }
+          : conv
+      );
+
+      setConversations(finalConversations);
+
+      // Generate a title for the conversation if it's "New Chat"
+      if (currentConversation.title === 'New Chat') {
+        const generatedTitle = await generateTitle(
+          userMessage.content,
+          assistantMessage.content
+        );
+        const updatedConversationsWithTitle = finalConversations.map((conv) =>
+          conv.id === currentConversationId
+            ? { ...conv, title: generatedTitle }
+            : conv
+        );
+        setConversations(updatedConversationsWithTitle);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage = {
+        role: 'assistant',
+        content:
+          'I apologize, but I encountered an error processing your request. Please try again.',
+        timestamp: new Date(),
+      };
+      const errorConversations = conversations.map((conv) =>
+        conv.id === currentConversationId
+          ? { ...conv, messages: [...conv.messages, errorMessage] }
+          : conv
+      );
+      setConversations(errorConversations);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+      inputRef.current?.focus();
+    }
+  };
 
   const deleteChat = (chatId) => {
-    const updatedConversations = conversations.filter(conv => conv.id !== chatId);
+    const updatedConversations = conversations.filter(
+      (conv) => conv.id !== chatId
+    );
     if (chatId === currentConversationId) {
       setCurrentConversationId(updatedConversations[0]?.id || 'default');
     }
     setConversations(updatedConversations);
   };
-
   const renderMessageContent = (content) => {
     const segments = content.split(/(```[\s\S]*?```)/g);
 
@@ -278,24 +309,15 @@ const ChatbotUI = () => {
       return <Latex key={index}>{segment}</Latex>;
     });
   };
-
-  const formatTimestamp = (date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  };
-
   return (
-
     <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Appbar */}
+      {/* AppBar */}
       <AppBar
         position="fixed"
         sx={{
           backgroundColor: 'white',
-          boxShadow: 2,
-          zIndex: (theme) => theme.zIndex.drawer + 1  // Make AppBar appear above drawer
+          boxShadow: 1,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
       >
         <Toolbar>
@@ -313,10 +335,13 @@ const ChatbotUI = () => {
             alt="Logo"
             sx={{ height: 60, mr: 2 }}
           />
-          <Typography variant="h6" color="error" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+          <Typography
+            variant="h6"
+            color="red"
+            sx={{ flexGrow: 1, fontWeight: 'bold' }}
+          >
             HouyemAI
           </Typography>
-          {/* User section */}
           {user && (
             <>
               <Button
@@ -340,18 +365,19 @@ const ChatbotUI = () => {
             </>
           )}
           <Tooltip title="Clear chat">
-            <IconButton onClick={clearCurrentChat} color="error">
+            <IconButton onClick={clearCurrentChat} color="red">
               <DeleteOutline />
             </IconButton>
           </Tooltip>
           <Tooltip title="Home">
-            <IconButton color="primary" onClick={() => navigate('/')}>
+            <IconButton color="error" onClick={() => navigate('/')}>
               <Home />
             </IconButton>
           </Tooltip>
         </Toolbar>
       </AppBar>
-      {/* Sidebar */}
+
+      {/* Left Drawer for Chat History */}
       <Drawer
         variant="persistent"
         anchor="left"
@@ -364,7 +390,7 @@ const ChatbotUI = () => {
             boxSizing: 'border-box',
             backgroundColor: '#f8f9fa',
             borderRight: '1px solid #e0e0e0',
-            paddingTop: '80px'
+            paddingTop: '10px',
           },
         }}
       >
@@ -390,19 +416,24 @@ const ChatbotUI = () => {
                   borderRadius: 1,
                   mb: 1,
                   '&.Mui-selected': {
-                    backgroundColor: '#fee2e2',
+                    backgroundColor: 'grey.100',
                     '&:hover': {
-                      backgroundColor: '#fecaca',
+                      backgroundColor: 'grey.300',
                     },
                   },
                 }}
               >
                 <ListItemIcon>
-                  <ChatBubbleOutline color="error" />
+                  <SmartToy color="error" />
                 </ListItemIcon>
                 <ListItemText
                   primary={conv.title}
-                  secondary={formatTimestamp(conv.messages[conv.messages.length - 1].timestamp)}
+                  secondary={new Intl.DateTimeFormat('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }).format(
+                    conv.messages[conv.messages.length - 1].timestamp
+                  )}
                 />
                 {conversations.length > 1 && (
                   <IconButton
@@ -421,44 +452,101 @@ const ChatbotUI = () => {
         </Box>
       </Drawer>
 
+      {/* Right Drawer for JSON Files */}
+      <Drawer
+        variant="persistent"
+        anchor="right"
+        open={jsonDrawerOpen}
+        sx={{
+          width: DRAWER_WIDTH,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: DRAWER_WIDTH,
+            boxSizing: 'border-box',
+            backgroundColor: '#f1f1f1',
+            borderLeft: '1px solid #e0e0e0',
+            paddingTop: '0px',
+          },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto', p: 2 }}>
+          <Typography variant="h6" color="black" gutterBottom>
+            Retrieved JSON Data
+          </Typography>
+          <Paper
+            elevation={2}
+            sx={{ p: 2, backgroundColor: '#fff', borderRadius: 1 }}
+          >
+            <pre
+              style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
+            >
+              {retrievedJson
+                ? JSON.stringify(retrievedJson, null, 2)
+                : 'No JSON data available'}
+            </pre>
+          </Paper>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Home />}
+            onClick={() => {
+              setJsonDrawerOpen(false);
+
+            }}
+            sx={{ mt: 2 }}
+          >
+            Close
+          </Button>
+        </Box>
+      </Drawer>
+
       {/* Main Content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          height: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          marginLeft: drawerOpen ? `${DRAWER_WIDTH}px` : 0,
-          transition: theme => theme.transitions.create(['margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
+          height: '90vh',
+          width: '200vh',
+          justifyContent: 'center',
+          marginLeft: drawerOpen ? -`30` : -50,
+          marginRight: jsonDrawerOpen ? `${DRAWER_WIDTH}px` : 10,
+          padding: '20px',
+          transition: (theme) =>
+            theme.transitions.create(['margin'], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen,
+            }),
         }}
       >
         <Toolbar />
-
-        <Box sx={{
-          flexGrow: 1,
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          overflowY: 'auto',
-          backgroundColor: '#f8f9fa'
-        }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            overflowY: '',
+            backgroundColor: '#f8f9fa',
+            witdth: '200vh',
+          }}
+        >
           {currentConversation.messages.map((message, index) => (
             <Box
               key={index}
               sx={{
                 display: 'flex',
                 gap: 2,
-                alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '80%'
+                alignSelf:
+                  message.role === 'user' ? 'flex-end' : 'flex-start',
+                maxWidth: '80%',
+                padding: 1,
               }}
             >
               {message.role === 'assistant' && (
-                <Avatar sx={{ bgcolor: '#ef4444' }}>
+                <Avatar sx={{ bgcolor: 'red' }}>
                   <SmartToy />
                 </Avatar>
               )}
@@ -467,51 +555,43 @@ const ChatbotUI = () => {
                   elevation={1}
                   sx={{
                     p: 2,
-                    backgroundColor: message.role === 'user' ? '#ef4444' : 'white',
-                    color: message.role === 'user' ? 'white' : 'inherit',
-                    borderRadius: 2
+                    backgroundColor:
+                      message.role === 'user'
+                        ? 'grey.200'
+                        : 'grey.200',
+                    color:
+                      message.role === 'user' ? 'flex-end' : 'flex-start',
+                    borderRadius: 2,
                   }}
                 >
                   <Typography sx={{ whiteSpace: 'pre-wrap' }}>
                     {renderMessageContent(message.content)}
                   </Typography>
                 </Paper>
-                <Box sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  mt: 0.5,
-                  justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start'
-                }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {formatTimestamp(message.timestamp)}
-                  </Typography>
-                  {message.role === 'assistant' && (
-                    <IconButton
-                      size="small"
-                      onClick={() => copyToClipboard(message.content)}
-                    >
-                      <ContentCopy fontSize="small" />
-                    </IconButton>
-                  )}
-                </Box>
               </Box>
               {message.role === 'user' && (
-                <Avatar sx={{ bgcolor: '#1976d2' }}>
+                <Avatar sx={{ bgcolor: 'red' }}>
                   <Person />
                 </Avatar>
               )}
             </Box>
           ))}
           {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-              <CircularProgress color="error" size={24} />
+            <Box
+              sx={{ display: 'flex', justifyContent: 'center', p: 2 }}
+            >
+              <CircularProgress color="primary" size={24} />
             </Box>
           )}
           <div ref={messagesEndRef} />
         </Box>
-
-        <Box sx={{ p: 2, backgroundColor: 'white', borderTop: '1px solid #e0e0e0' }}>
+        <Box
+          sx={{
+            p: 2,
+            backgroundColor: 'white',
+            borderTop: '1px solid #e0e0e0',
+          }}
+        >
           <TextField
             fullWidth
             multiline
@@ -527,7 +607,7 @@ const ChatbotUI = () => {
                 <IconButton
                   onClick={handleSend}
                   disabled={!input.trim() || loading}
-                  color="error"
+                  color="primary"
                 >
                   <SendIcon />
                 </IconButton>
@@ -536,7 +616,7 @@ const ChatbotUI = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 '&.Mui-focused fieldset': {
-                  borderColor: '#ef4444',
+                  borderColor: 'primary.main',
                 },
               },
             }}

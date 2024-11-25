@@ -300,7 +300,7 @@ const HomePage = () => {
                 <Typography variant="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
                   Mar7aba {user ? `${user.firstName}` : ''}
                 </Typography>
-                <Typography variant="h3" sx={{ mb: 4, fontWeight: 'bold', color: '#ffd700' }}>
+                <Typography variant="h3" sx={{ mb: 4, fontWeight: 'bold', color: '#fff8dc' }}>
                   مستشارك القانوني الذكي
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 4 }}>

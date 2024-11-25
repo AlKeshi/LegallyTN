@@ -1,0 +1,278 @@
+/* Styling for Chatbot UI */
+
+/* General styles for centering the content */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main container styles */
+/* Main container styles */
+/* Main container styles */
+.main-container {
+  width: 200%; /* Increase the width */
+  max-width: 1600px; /* Ensure the container doesn't exceed a max width */
+  height: 90vh; /* Adjust height for better fit */
+  background-color: #ffffff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+
+  /* Centering the container */
+  margin: 0 auto; /* Horizontally center */
+  top: 50%; /* Positioning for vertical centering */
+  transform: translateY(-50%); /* Adjust for proper centering */
+  position: absolute;
+}
+
+/* Ensure body height and flex alignment for full centering */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+
+
+/* AppBar styles */
+.appbar {
+  background-color: #ffffff !important;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.appbar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.appbar-logo {
+  height: 50px;
+  margin-right: 20px;
+}
+
+.appbar-title {
+  color: #ff5252;
+  font-weight: bold;
+}
+
+/* Sidebar (Chat History) styles */
+.drawer-chat-history {
+  width: 300px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 80px;
+  transition: transform 0.3s ease;
+}
+
+.drawer-chat-history .MuiButton-root {
+  margin-bottom: 16px;
+  padding: 10px;
+  border-radius: 8px;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.drawer-chat-history .MuiButton-root:hover {
+  background-color: #ff7f7f;
+}
+
+.drawer-chat-history .MuiListItemButton-root {
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s;
+}
+
+.drawer-chat-history .MuiListItemButton-root.Mui-selected {
+  background-color: #ffebee !important;
+}
+
+.drawer-chat-history .MuiListItemButton-root:hover {
+  background-color: #ffe0e0;
+}
+
+/* JSON Drawer styles */
+.drawer-json {
+  width: 300px;
+  background-color: #f1f1f1;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 80px;
+  transition: transform 0.3s ease;
+}
+
+.json-content {
+  padding: 16px;
+}
+
+.json-paper {
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Main content area styles */
+.main-content {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.main-content-scroll {
+  flex-grow: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 20px;
+  background-color: #f8f9fa;
+}
+
+/* Chat bubble styles */
+.chat-bubble {
+  display: flex;
+  align-items: center;
+  max-width: 80%;
+  gap: 16px;
+}
+
+.chat-bubble.assistant {
+  align-self: flex-start;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.chat-message {
+  padding: 16px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.chat-message.assistant {
+  background-color: #ffffff;
+}
+
+.chat-message.user {
+  background-color: #ff5252;
+  color: #ffffff;
+}
+
+.chat-message:hover {
+  transform: scale(1.02);
+}
+
+/* Chat input styles */
+.chat-input-container {
+  padding: 16px;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.chat-input-field {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.chat-input-field:focus {
+  border-color: #ff5252;
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(255, 82, 82, 0.4);
+}
+
+.send-button {
+  margin-left: 8px;
+  color: #ff5252;
+}
+
+/* Scrollbar styling for chat content */
+.main-content-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content-scroll::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 8px;
+}
+
+.main-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+/* Avatar styling */
+.avatar-assistant {
+  background-color: #ef4444;
+}
+
+.avatar-user {
+  background-color: #1976d2;
+}
+
+/* Loading page styles */
+.loading-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.loading-spinner {
+  color: #ff5252;
+  width: 60px;
+  height: 60px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .main-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .drawer-chat-history, .drawer-json {
+    width: 240px;
+  }
+
+  .chat-message {
+    font-size: 0.85rem;
+  }
+}
