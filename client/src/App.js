@@ -476,7 +476,7 @@ const HomePage = () => {
           position: 'fixed',
           bottom: 20,
           right: 20,
-          backgroundColor: '#ef4444',
+          backgroundColor: 'grey',
           color: 'white',
           '&:hover': { backgroundColor: '#d32f2f' },
         }}
