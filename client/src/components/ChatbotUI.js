@@ -1,7 +1,10 @@
 // ChatbotUI.js
 
 import React, { useState, useRef, useEffect } from 'react';
+import DocumentsDrawer from './DocumentsDrawer';
+import ArticleIcon from '@mui/icons-material/Article';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+
 import {
   Box,
   Paper,
@@ -44,6 +47,7 @@ const genAI = new GoogleGenerativeAI('AIzaSyABdg1rJTUE01cBRvxbdSo9bXCfn6p4Quw');
 
 const DRAWER_WIDTH = 280;
 
+
 const ChatbotUI = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -60,6 +64,8 @@ const ChatbotUI = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const [documentsOpen, setDocumentsOpen] = useState(true);
+  const [retrievedDocuments, setRetrievedDocuments] = useState([]);
 
   // Function to copy text to clipboard
   const copyToClipboard = (text) => {
@@ -422,6 +428,8 @@ const ChatbotUI = () => {
 
       const apiResponse = await queryResponse.json();
 
+      setRetrievedDocuments(apiResponse.retrieved_documents || []);
+
       const assistantMessage = {
         sender_role: 'chatbot',
         message_content: apiResponse.answer,  // Using apiResponse.answer instead of aiText
@@ -557,6 +565,15 @@ const ChatbotUI = () => {
           <Tooltip title="Clear chat">
             <IconButton onClick={clearCurrentChat} color="error">
               <DeleteOutline />
+            </IconButton>
+          </Tooltip>
+          {/* Add the new documents toggle button here */}
+          <Tooltip title="Toggle Documents">
+            <IconButton 
+              color="error" 
+              onClick={() => setDocumentsOpen(!documentsOpen)}
+            >
+              <ArticleIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Home">
@@ -695,15 +712,18 @@ const ChatbotUI = () => {
 
       {/* Main Content */}
       <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100vh',
-          padding: '80px 20px 20px 20px', // Adjusted padding to accommodate AppBar and Drawer
-          overflow: 'hidden',
-        }}
+           component="main"
+           sx={{
+             flexGrow: 1,
+             display: 'flex',
+             flexDirection: 'column',
+             height: '100vh',
+             padding: '80px 20px 20px 20px',
+             marginRight: documentsOpen ? '0px' : 0,
+             width: '100%',  
+             transition: 'margin 0.2s ease',
+             overflow: 'hidden',
+           }}
       >
         <Box
           sx={{
@@ -805,7 +825,12 @@ const ChatbotUI = () => {
           />
         </Box>
       </Box>
-
+      {/* Add the DocumentsDrawer here, before the Snackbar */}
+      <DocumentsDrawer 
+        open={documentsOpen}
+        onClose={() => setDocumentsOpen(false)}
+        documents={retrievedDocuments}
+      />
       {/* Snackbar for Notifications */}
       <Snackbar
         open={snackbar.open}
