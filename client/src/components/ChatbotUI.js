@@ -396,15 +396,35 @@ const ChatbotUI = () => {
         throw new Error(errorData.message || 'Failed to send message');
       }
 
-      // Generate AI response on the client side
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-      const prompt = `${input.trim()}`;
-      const aiResponse = await model.generateContent(prompt);
-      const aiText = aiResponse.response.text();
+      // Get the last 10 messages from the conversation
+      const getLastMessages = (conv) => {
+        if (!conv || !conv.messages) return [];
+        return conv.messages.slice(-10).map(msg => ({
+          role: msg.sender_role === 'chatbot' ? 'assistant' : 'user',
+          content: msg.message_content
+        }));
+      };
+
+      // In your handleSend function, modify the FastAPI request
+      const queryResponse = await fetch('http://localhost:8000/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: input.trim(),
+          top_k: 20,
+          memory: getLastMessages(currentConversation)
+        }),
+      });
+
+      if (!queryResponse.ok) {
+        throw new Error('Failed to get response from AI');
+      }
+
+      const apiResponse = await queryResponse.json();
 
       const assistantMessage = {
-        sender_role: 'chatbot', // Set sender_role to 'chatbot'
-        message_content: aiText,
+        sender_role: 'chatbot',
+        message_content: apiResponse.answer,  // Using apiResponse.answer instead of aiText
         timestamp: new Date(),
         liked: false,
         disliked: false,
