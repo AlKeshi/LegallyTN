@@ -45,7 +45,7 @@ import { useNavigate } from 'react-router-dom';
 
 const genAI = new GoogleGenerativeAI('AIzaSyABdg1rJTUE01cBRvxbdSo9bXCfn6p4Quw'); // Use environment variable for API key
 
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 400;
 
 
 const ChatbotUI = () => {
@@ -417,7 +417,7 @@ const ChatbotUI = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: input.trim(),
-          top_k: 20,
+          top_k: 30,
           memory: getLastMessages(currentConversation)
         }),
       });
@@ -450,16 +450,30 @@ const ChatbotUI = () => {
       // Persist the assistant message to the backend
       await addAssistantMessage(currentConversationId, assistantMessage.message_content);
 
-      // Generate a title for the conversation if it's "New Chat"
-      const currentConv = finalConversations.find((conv) => conv.id === currentConversationId);
-      if (currentConv.title === 'New Chat') {
-        const generatedTitle = await generateTitle(userMessage.message_content, assistantMessage.message_content);
-        // Update the title on the server
-        await updateConversationTitle(currentConversationId, generatedTitle);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setSnackbar({ open: true, message: error.message, severity: 'error' });
+const currentConv = finalConversations.find((conv) => conv.id === currentConversationId);
+if (currentConv.title === 'New Chat') {
+  try {
+    const generatedTitle = await generateTitle(userMessage.message_content, assistantMessage.message_content);
+    // Update the title on the server
+    await updateConversationTitle(currentConversationId, generatedTitle);
+    
+    // Update the title in the local state immediately
+    setConversations(prevConversations => 
+      prevConversations.map(conv => 
+        conv.id === currentConversationId 
+          ? { ...conv, title: generatedTitle }
+          : conv
+      )
+    );
+  } catch (titleError) {
+    console.error('Error generating/updating title:', titleError);
+    // Continue with the conversation even if title update fails
+  }
+}
+    
+} catch (error) {
+  console.error('Error:', error);
+  setSnackbar({ open: true, message: error.message, severity: 'error' });
 
       // Optionally, revert the optimistic UI update
       const revertedConversations = conversations.map((conv) =>
@@ -718,8 +732,9 @@ const ChatbotUI = () => {
              display: 'flex',
              flexDirection: 'column',
              height: '100vh',
-             padding: '80px 20px 20px 20px',
-             marginRight: documentsOpen ? '0px' : 0,
+             padding: '80px 0px 0px 0px',
+             marginRight: documentsOpen ? '200px' : 0,
+             marginLeft: '-350px',
              width: '100%',  
              transition: 'margin 0.2s ease',
              overflow: 'hidden',

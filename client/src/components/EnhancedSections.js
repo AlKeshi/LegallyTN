@@ -175,14 +175,6 @@ const TeamSection = () => {
       expertise: ["AI Development", "Machine Learning", "Legal Tech"]
     },
     {
-      name: "Houyem",
-      role: "Legal Expert",
-      description: "Houyem provides the crucial legal knowledge that ensures the AI system is up-to-date with the latest Tunisian laws and regulations.",
-      linkedin: "https://linkedin.com",
-      email: "mailto:contact@houyemai.com",
-      expertise: ["Tunisian Law", "Legal Consultation", "AI Training"]
-    },
-    {
       name: "Salem Fradi",
       role: "UI/UX Designer",
       description: "Salem designs user-friendly experiences that make legal information accessible and engaging for everyone using our platform.",
