@@ -76,7 +76,7 @@ const HomePage = () => {
   const testimonials = [
     {
       name: "Amal A.",
-      quote: "HouyemAI helped me understand my rights so easily. Highly recommend!",
+      quote: "LegallyTN helped me understand my rights so easily. Highly recommend!",
     },
     {
       name: "Yassine K.",
@@ -110,12 +110,7 @@ const HomePage = () => {
     {
       name: "Oussema Jebali",
       role: "Lead Developer",
-      description: "Oussema is the visionary lead developer behind HouyemAI.",
-    },
-    {
-      name: "Houyem",
-      role: "Legal Expert",
-      description: "Houyem provides the crucial legal knowledge that ensures the AI system is up-to-date.",
+      description: "Oussema is the visionary lead developer behind LegallyTN.",
     },
     {
       name: "Salem Fradi",
@@ -179,7 +174,7 @@ const HomePage = () => {
               sx={{ height: 100, mr: 2 }}
             />
             <Typography variant="h6" color="error" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-              HouyemAI
+              LegallyTN
             </Typography>
           </Box>
 
@@ -437,7 +432,7 @@ const HomePage = () => {
                 About Us
               </Typography>
               <Typography variant="body2">
-                HouyemAI is committed to providing accessible and reliable legal guidance, leveraging AI technology to support the community.
+                LegallyTN is committed to providing accessible and reliable legal guidance, leveraging AI technology to support the community.
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -464,7 +459,7 @@ const HomePage = () => {
             </Grid>
           </Grid>
           <Typography variant="body2" sx={{ mt: 4, textAlign: 'center' }}>
-            &copy; 2024 HouyemAI. All rights reserved.
+            &copy; 2024 LegallyTN. All rights reserved.
           </Typography>
         </Container>
       </Box>

@@ -8,10 +8,10 @@ const AboutPage = () => {
     <Box sx={{ py: 8 }}>
       <Container maxWidth="lg">
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
-          About HouyemAI
+          About LegallyTN
         </Typography>
         <Typography variant="body1" sx={{ mb: 6, textAlign: 'center' }}>
-          HouyemAI is an advanced legal consulting chatbot designed to provide accessible and reliable guidance on Tunisian law. Our platform is powered by cutting-edge AI technology to offer 24/7 assistance for users in understanding various legal queries. Learn more about how HouyemAI can empower you with the knowledge you need.
+          LegallyTN is an advanced legal consulting chatbot designed to provide accessible and reliable guidance on Tunisian law. Our platform is powered by cutting-edge AI technology to offer 24/7 assistance for users in understanding various legal queries. Learn more about how LegallyTN can empower you with the knowledge you need.
         </Typography>
         
         {/* Features Section */}
@@ -50,7 +50,7 @@ const AboutPage = () => {
                     Lead Developer
                   </Typography>
                   <Typography variant="body2">
-                    Oussema is the visionary lead developer behind HouyemAI.
+                    Oussema is the visionary lead developer behind LegallyTN.
                   </Typography>
                 </Card>
               </Grid>

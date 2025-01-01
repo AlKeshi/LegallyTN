@@ -552,7 +552,7 @@ if (currentConv.title === 'New Chat') {
           </IconButton>
           <Box component="img" src="/adhebi.png" alt="Logo" sx={{ height: 60, mr: 2 }} />
           <Typography variant="h6" color="red" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            HouyemAI
+            LegallyTN
           </Typography>
           {user && (
             <>

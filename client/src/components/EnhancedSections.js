@@ -168,7 +168,7 @@ const TeamSection = () => {
     {
       name: "Oussema Jebali",
       role: "Lead Developer",
-      description: "Oussema is the visionary lead developer behind HouyemAI, bringing extensive experience in AI and machine learning to create innovative legal tech solutions.",
+      description: "Oussema is the visionary lead developer behind LegallyTN, bringing extensive experience in AI and machine learning to create innovative legal tech solutions.",
       linkedin: "https://linkedin.com",
       github: "https://github.com",
       email: "mailto:oussema.jebali@supcom.tn",
@@ -203,7 +203,7 @@ const TeamSection = () => {
             Meet Our Team
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            The brilliant minds behind HouyemAI
+            The brilliant minds behind LegallyTN
           </Typography>
         </Box>
 
